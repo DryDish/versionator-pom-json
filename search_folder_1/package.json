@@ -1,6 +1,6 @@
 {
   "name": "webstore",
-  "version": "0.0.0",
+  "version": "0.4",
   "license": "BSD 3-Clause License",
   "scripts": {
     "nx": "nx",

@@ -10,6 +10,7 @@ pub enum CustomError {
     TargetNotFound,
     SourceNotFound,
     BadParams,
+    VersionNotFound,
 }
 
 impl std::error::Error for CustomError {}
@@ -25,6 +26,7 @@ impl fmt::Display for CustomError {
             &Self::TargetNotFound => write!(f, "Target File Not Found"),
             &Self::SourceNotFound => write!(f, "Source File Not Found"),
             &Self::BadParams => write!(f, "Parameters Passed Not Understood"),
+            &Self::VersionNotFound => write!(f, "String Not Found"),
         }
     }
 }
