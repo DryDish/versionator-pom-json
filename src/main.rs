@@ -1,4 +1,9 @@
-use std::{env, fs::File, io::{BufRead, BufReader, Read, Write}, path::PathBuf};
+use std::{
+    env,
+    fs::File,
+    io::{BufRead, BufReader, Read, Write},
+    path::PathBuf,
+};
 use walkdir::WalkDir;
 mod custom_error;
 use custom_error::CustomError;
@@ -9,32 +14,40 @@ fn main() -> Result<(), CustomError> {
     let (source_file_name, source_search_word) = ("package.json", "\"version\"");
     let (target_file_name, target_search_word) = ("Pom.xml", "<version>");
 
-    let (source_path, target_path) = get_file_paths(target_file_name, source_file_name, &working_dir)?;
-
+    let (source_path, target_path) =
+        get_file_paths(target_file_name, source_file_name, &working_dir)?;
     let source_file = File::open(source_path).expect("unable to open source file 😓");
-    
+
     println!("Searching {} for the version.", &source_file_name);
     let version = version_from_package_json(source_search_word, source_file)?;
     println!("Version found: {}", version);
 
     let target_file = File::open(&target_path).expect("unable to open target file 😓");
-    println!("Searching {} for the version tag to replace", &source_file_name);
+    println!(
+        "Searching {} for the version tag to replace",
+        &source_file_name
+    );
 
     let fixed_version = replace_pom_version(target_search_word, &version, target_file)?;
     let mut target_file_write = File::create(target_path).expect("unable to open target file 😓");
-    target_file_write.write_all(fixed_version.as_bytes()).expect("Failed to save to file 😱");
-    
+    target_file_write
+        .write_all(fixed_version.as_bytes())
+        .expect("Failed to save to file 😱");
+
     println!("Main end");
     Ok(())
 }
 
 fn search_for_file(file_name: &str, path: &PathBuf) -> Result<PathBuf, CustomError> {
-    for entry in WalkDir::new(path) {
-        let entry = entry.unwrap();
-        if entry.file_name().to_str().unwrap().contains(file_name) {
-            return Ok(entry.into_path());
+    if path.exists() {
+        for entry in WalkDir::new(path) {
+            let entry = entry.unwrap();
+            if entry.file_name().to_str().unwrap().contains(file_name) {
+                return Ok(entry.into_path());
+            }
         }
     }
+
     Err(CustomError::FileNotFound)
 }
 
@@ -106,14 +119,18 @@ fn version_from_package_json(search_word: &str, file: File) -> Result<String, Cu
         if line.contains(search_word) {
             // +4 to remove the ' : "' chars
             let start_index = line.find(search_word).unwrap() + search_word.len() + 3;
-            let end_index = line.find(",").unwrap() -1;
+            let end_index = line.find(",").unwrap() - 1;
             return Ok(line[start_index..end_index].to_string());
         }
     }
     return Err(CustomError::VersionNotFound);
 }
 
-fn replace_pom_version(search_word: &str, replacement_word: &str, file: File) -> Result<String, CustomError>{
+fn replace_pom_version(
+    search_word: &str,
+    replacement_word: &str,
+    file: File,
+) -> Result<String, CustomError> {
     let mut counter = 0;
     let reader = BufReader::new(file);
     let mut return_string = String::new();
