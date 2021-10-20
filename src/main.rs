@@ -4,7 +4,6 @@ use std::{
     io::{BufRead, BufReader, Write},
     path::PathBuf,
 };
-use walkdir::WalkDir;
 mod custom_error;
 use custom_error::CustomError;
 
@@ -51,7 +50,7 @@ fn main() -> Result<(), CustomError> {
     let fixed_version = match replace_pom_version(
         &search_word,
         &version,
-        source_file,
+        target_file,
         version_instance_count.clone(),
     ) {
         Ok(changed) => changed,

@@ -4,11 +4,6 @@ use core::fmt;
 pub enum CustomError {
     FileNotFound,
     IoError,
-    DirectoryNotFound,
-    UnableToOpenDirectory,
-    UnableToOpenFile,
-    TargetNotFound,
-    SourceNotFound,
     BadParams,
     VersionNotFound,
 }
@@ -20,11 +15,6 @@ impl fmt::Display for CustomError {
         match self {
             &Self::FileNotFound => write!(f, "File Not found"),
             &Self::IoError => write!(f, "Io Error"),
-            &Self::DirectoryNotFound => write!(f, "Directory Not found"),
-            &Self::UnableToOpenDirectory => write!(f, "Unable to open directory"),
-            &Self::UnableToOpenFile => write!(f, "Unable To Open File"),
-            &Self::TargetNotFound => write!(f, "Target File Not Found"),
-            &Self::SourceNotFound => write!(f, "Source File Not Found"),
             &Self::BadParams => write!(f, "Parameters Passed Not Understood"),
             &Self::VersionNotFound => write!(f, "String Not Found"),
         }
