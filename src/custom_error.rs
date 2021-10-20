@@ -27,9 +27,3 @@ impl From<std::io::Error> for CustomError {
         Self::IoError
     }
 }
-
-impl From<walkdir::Error> for CustomError {
-    fn from(_: walkdir::Error) -> Self {
-        Self::IoError
-    }
-}

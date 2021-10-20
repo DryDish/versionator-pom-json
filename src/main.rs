@@ -175,8 +175,10 @@ fn replace_pom_version(
     if match_found {
         return Ok(return_string);
     } else {
-        println!("Version tag instance {} not found in pom.xml", &search_word_count);
+        println!(
+            "Version tag instance {} not found in pom.xml",
+            &search_word_count
+        );
         return Err(CustomError::VersionNotFound);
     }
-
 }
