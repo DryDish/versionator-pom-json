@@ -17,8 +17,7 @@ fn main() -> Result<(), CustomError> {
         Err(error) => return Err(error),
     };
     if version_instance_count <= 0 {
-        println!("Please provide a valid version instance number");
-        return Err(CustomError::BadParams);
+
     }
     let search_word = "version";
     let match_word = "<version>";
@@ -89,11 +88,18 @@ fn handle_params(args: Vec<String>) -> Result<(PathBuf, PathBuf, u8), CustomErro
     match args.len() {
         //6 if args[1] == "-s" && args[3] == "-t" && args[4] == "-p" => {
         4 => {
+            let number = match args[3].parse::<u8>() {
+                Ok(number) => number,
+                Err(_) => {
+                    println!("Please provide a valid version instance number (0-255)");
+                    return Err(CustomError::BadParams);
+                }
+            };
             return Ok((
                 PathBuf::from(args[1].clone()),
                 PathBuf::from(args[2].clone()),
-                args[3].parse::<u8>().unwrap_or(0),
-            ))
+                number,
+            ));
         }
         2 if args[1] == "-h" || args[1] == "--help" || args[1] == "-H" => {
             print_help_text();
@@ -113,6 +119,7 @@ fn print_help_text() {
     println!("and replace the version in your pom.xml file. Since pom.xml has multiple version");
     println!("tags, provide the tag number you would like replaced. The app counts instances of");
     println!("tags with the pattern '<version>' and replaces the one you passed.");
+    println!("version tag number is any number from 0 to 255");
     println!();
     println!("Usage:");
     println!(
