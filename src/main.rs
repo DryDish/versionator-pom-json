@@ -16,9 +16,6 @@ fn main() -> Result<(), CustomError> {
         Ok(tuple) => tuple,
         Err(error) => return Err(error),
     };
-    if version_instance_count <= 0 {
-
-    }
     let search_word = "version";
     let match_word = "<version>";
     let source_file = match File::open(&source) {
@@ -58,7 +55,6 @@ fn main() -> Result<(), CustomError> {
     ) {
         Ok(changed) => changed,
         Err(error) => {
-            println!("Unable to update pom.xml! FUCK!");
             return Err(error);
         }
     };
@@ -158,6 +154,7 @@ fn replace_pom_version(
     search_word_count: u8,
 ) -> Result<String, CustomError> {
     let mut counter = 0;
+    let mut match_found = false;
     let reader = BufReader::new(file);
     let mut return_string = String::new();
     for line in reader.lines() {
@@ -169,10 +166,17 @@ fn replace_pom_version(
                 println!("Pom.xml previous line |{}", &line);
                 line.replace_range(start_index..end_index, replacement_string);
                 println!("Pom.xml replaced line |{}", &line);
+                match_found = true;
             }
             counter += 1;
         }
         return_string.push_str(&(line + &("\n".to_string())));
     }
-    return Ok(return_string);
+    if match_found {
+        return Ok(return_string);
+    } else {
+        println!("Version tag instance {} not found in pom.xml", &search_word_count);
+        return Err(CustomError::VersionNotFound);
+    }
+
 }
