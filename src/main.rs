@@ -52,7 +52,7 @@ fn main() -> Result<(), CustomError> {
     println!("Version read from package.json: '{}'", &version);
 
     let fixed_version = match replace_pom_version(
-        &search_word,
+        &match_word,
         &version,
         target_file,
         version_instance_count.clone(),
@@ -136,7 +136,7 @@ fn version_from_package_json(search_word: &str, file: &File) -> Result<String, C
         let line = line?;
         if line.contains(search_word) {
             // +4 to remove the ' : "' chars
-            let start_index = line.find(search_word).unwrap() + search_word.len() + 3;
+            let start_index = line.find(search_word).unwrap() + search_word.len() + 4;
             let end_index = line.find(",").unwrap() - 1;
             return Ok(line[start_index..end_index].to_string());
         }
