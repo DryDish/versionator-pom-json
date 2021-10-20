@@ -6,6 +6,7 @@ pub enum CustomError {
     IoError,
     BadParams,
     VersionNotFound,
+    HelpPrinted,
 }
 
 impl std::error::Error for CustomError {}
@@ -17,6 +18,7 @@ impl fmt::Display for CustomError {
             &Self::IoError => write!(f, "Io Error"),
             &Self::BadParams => write!(f, "Parameters Passed Not Understood"),
             &Self::VersionNotFound => write!(f, "String Not Found"),
+            &Self::HelpPrinted => write!(f, ""),
         }
     }
 }

@@ -16,6 +16,10 @@ fn main() -> Result<(), CustomError> {
         Ok(tuple) => tuple,
         Err(error) => return Err(error),
     };
+    if version_instance_count <= 0 {
+        println!("Please provide a valid version instance number");
+        return Err(CustomError::BadParams);
+    }
     let search_word = "version";
     let match_word = "<version>";
     let source_file = match File::open(&source) {
@@ -88,8 +92,12 @@ fn handle_params(args: Vec<String>) -> Result<(PathBuf, PathBuf, u8), CustomErro
             return Ok((
                 PathBuf::from(args[1].clone()),
                 PathBuf::from(args[2].clone()),
-                args[3].parse::<u8>().unwrap_or(1),
+                args[3].parse::<u8>().unwrap_or(0),
             ))
+        }
+        2 if args[1] == "-h" || args[1] == "--help" || args[1] == "-H" => {
+            print_help_text();
+            return Err(CustomError::HelpPrinted);
         }
         _ => {
             print_help_text();
