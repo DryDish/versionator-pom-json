@@ -88,7 +88,7 @@ fn handle_params(args: Vec<String>) -> Result<(PathBuf, PathBuf, u8), CustomErro
             return Ok((
                 PathBuf::from(args[1].clone()),
                 PathBuf::from(args[2].clone()),
-                args[3].parse::<u8>().unwrap_or(0),
+                args[3].parse::<u8>().unwrap_or(1),
             ))
         }
         _ => {
